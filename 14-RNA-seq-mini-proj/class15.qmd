@@ -1,0 +1,22 @@
+---
+title: "class-15"
+format: pdf
+---
+Create a Personal Access Token (PAT) on GitHub
+
+```{r}
+#install.packages("usethis")
+library(usethis)
+create_github_token()
+
+```
+
+Store Personal Access Token to Connect RStudio and GitHub
+
+```{r}
+#install.packages("gitcreds")
+library(gitcreds)
+gitcreds_set()
+```
+
+5. Create a GitHub repository
