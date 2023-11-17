@@ -1,0 +1,45 @@
+---
+title: "hw6"
+output: pdf_document
+date: "2023-10-23"
+---
+```{r}
+df <- data.frame(a=1:10, b=seq(200,400,length=10),c=11:20,d=NA)
+df$a <- (df$a - min(df$a)) / (max(df$a) - min(df$a))
+df$b <- (df$b - min(df$a)) / (max(df$b) - min(df$b))
+df$c <- (df$c - min(df$c)) / (max(df$c) - min(df$c))
+df$d <- (df$d - min(df$d)) / (max(df$a) - min(df$d)) 
+
+library(bio3d)
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+
+hc <- hclust( dist( rbind(s1.b, s2.b, s3.b) ) )
+plot(hc)
+```
+My function needs to input PDB data and output a plot for the specified
+protein
+
+```{r}
+Jackie_function <- function(x) {
+  protein <-read.pdb(x) # read file
+  chain <- trim.pdb(protein, chain = "A", elety = "CA")
+  b_factors <- chain$atom$b #extracting b factors 
+  plotb3(b_factors,sse=bfactors.chain, typ="l",ylab="Bfactor") #plot- 
+}
+
+```
+This function automates the above example process so you can just input the structure file (PBD) and get out the same plotting information, but it will be quicker than typing everything out like in the example. 
+For any protein input into function- output is a plot with:
+x axis= residue #
+y axis= b factors

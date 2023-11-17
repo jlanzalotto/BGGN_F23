@@ -1,0 +1,125 @@
+---
+title: "Class 5: Data Visualization"
+author: "Jackie"
+format: pdf
+---
+
+##Using GGplot
+#if you don't have a library, download it by using 'install.packages(')
+
+
+```{r}
+library(ggplot2)
+ggplot(cars)
+
+
+ggplot(cars) +
+  aes(x=speed, y=dist)
+```  
+As we can see above we don’t have any points in our plot yet. Adding them is the job of the geom_point() function discussed next.
+```{r}
+ggplot(cars) +
+  aes(x=speed, y=dist) +
+  geom_point() + 
+  geom_smooth(method="lm", se=FALSE) +
+  theme_bw() +
+  labs(title="Speed and Stopping Distances of Cars",
+       x="Speed (MPH)", 
+       y="Stopping Distance (ft)",
+       subtitle = "Speed vs distance",
+       caption="Dataset: 'cars'")
+  
+```  
+#GENES DATAset  
+```{r}
+url <- "https://bioboot.github.io/bimm143_S20/class-material/up_down_expression.txt"
+genes <- read.delim(url)
+head(genes) 
+
+nrow(genes)
+ncol(genes)
+table(genes$State)
+
+
+p<- ggplot(genes) +
+aes(x=Condition1, y=Condition2,col=State) +
+geom_point()
+
+p+ scale_colour_manual( values=c("blue","black","red") )
+```
+## 7 going further
+
+ File location online
+```{r}
+
+url <- "https://raw.githubusercontent.com/jennybc/gapminder/master/inst/extdata/gapminder.tsv"
+
+gapminder <- read.delim(url)
+
+library(dplyr)
+
+gapminder_2007 <- gapminder %>% filter(year==2007)
+
+gapminder_2007_gg<-ggplot(gapminder_2007)+
+  aes(x=gdpPercap,y=lifeExp,color=continent,size=pop)+
+  geom_point(alpha=.5)+
+   scale_size_area(max_size = 10)
+```
+#2007 vs 1957
+```{r}
+gapminder_1957 <- gapminder %>% filter(year==1957)
+
+gapminder_1957_gg<- ggplot(gapminder_1957)+
+  aes(x=gdpPercap,y=lifeExp,color=continent,size=pop)+
+  geom_point(alpha=.7)+
+   scale_size_area(max_size = 10)
+
+
+gapminder_1957 <- gapminder %>% filter(year==1957 | year==2007)
+
+ggplot(gapminder_1957) + 
+  geom_point(aes(x = gdpPercap, y = lifeExp, color=continent,
+                 size = pop), alpha=0.7) + 
+  scale_size_area(max_size = 8) +
+  facet_wrap(~year)
+```
+#BAR CHARTS
+
+```{r}
+gapminder_top5 <- gapminder %>% 
+  filter(year==2007) %>% 
+  arrange(desc(pop)) %>% 
+  top_n(5, pop)
+
+ggplot(gapminder_top5) + 
+  geom_col(aes(x = country, y = pop, fill=gdpPercap))
+
+ggplot(gapminder_top5) +
+  aes(x=reorder(country, -pop), y=pop, fill=gdpPercap) +
+  geom_col()
+```
+```{r}
+
+ggplot(gapminder_top5) +
+  aes(x=reorder(country, -pop), y=pop, fill=country) +
+  geom_col(col="gray30") +
+  guides(fill="none")
+```
+
+```{r}
+
+head(USArrests)
+USArrests$State <- rownames(USArrests)
+ggplot(USArrests) +
+  aes(x=reorder(State,Murder), y=Murder) +
+  geom_col() +
+  coord_flip()
+
+ggplot(USArrests) +
+  aes(x=reorder(State,Murder), y=Murder) +
+  geom_point() +
+  geom_segment(aes(x=State, 
+                   xend=State, 
+                   y=0, 
+                   yend=Murder), color="blue") +
+  coord_flip()

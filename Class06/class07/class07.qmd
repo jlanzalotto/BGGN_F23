@@ -1,0 +1,165 @@
+---
+title: "Class07"
+format: pdf
+---
+
+```{r}
+rnorm(10)
+hist(rnorm(10000,mean=3))
+```
+
+```{r}
+
+tmp<-c(rnorm(30,3),rnorm(30,-3))
+x<- cbind(x=tmp,y=rev(tmp))
+plot(x)
+```
+
+
+```{r}
+
+#k<- kmeans(x, centers,iter.max=10L...)
+k<-kmeans(x,centers=2,nstart=20)
+k
+```
+
+> Q. How many points are in each cluster
+
+```{r}
+k$size
+
+``` 
+<Q2. The clustering result i.e. membership vector?
+
+```{r}
+k$cluster
+
+```
+
+
+>Q4. Make a plot of our data colored by clustering results with optionally the cluster centers shown
+
+```{r}
+
+plot(x,col=k$cluster)
+points(k$centers,col="blue",pch=15,cex=2)
+```
+>Q5. Run Kmeans again but cluster into 3 groups and plot the results
+
+```{r}
+k<-kmeans(x,centers=3,nstart=20)
+k$cluster
+plot(x,col=k$cluster)
+
+```
+
+#Hierarchical Clustering
+
+The main function in baseR is 'hclust()'
+
+```{r}
+
+hc<-hclust(dist(x))
+
+plot(hc)
+abline(h=8)
+```
+
+```{r}
+grps<-cutree(hc,h=8)
+plot(grps)
+
+```
+
+>Q. Plot our hclust rsults in terms of our data colored by cluster membership
+
+```{r}
+
+plot(x,col=grps)
+
+```
+Lab portion
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url, row.names=1)
+head(x)
+dim(x)
+```
+Q1> 5 columns and 17 rows, but if you do row.names=1, there are 17 rows and 4 columns
+
+Q2> I prefer to import the df using row.names=1 so I know I am always working with the same df in following lines
+`
+```{r}
+colors= (c("orange","red","blue","dark green"))
+barplot(as.matrix(x), beside=F, col=colors)
+
+
+```
+Q5> horiz! I"f FALSE, the bars are drawn vertically with the first bar to the left. If TRUE, the bars are drawn horizontally with the first at the bottom."
+
+
+```{r}
+pairs(x, col=colors, pch=16)
+
+
+
+```
+Q6> There is a stronger outlier in the N. Ireland dataset that may affect the coorelation value
+
+
+```{r}
+t(x) #transpose x
+pca<- prcomp(t(x))
+summary(pca)
+```
+```{r}
+# Plot PC1 vs PC2
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x))
+
+
+```
+
+
+Q8> Customize your plot so that the colors of the country names match the colors in our UK and Ireland map and table at start of this document.
+```{r}
+# Plot PC1 vs PC2
+plot(pca$x[,1], pca$x[,2], xlab="PC1", ylab="PC2", xlim=c(-270,500))
+text(pca$x[,1], pca$x[,2], colnames(x),col=colors)
+
+
+```
+
+```{r}
+#variance from diff PC
+v <- round( pca$sdev^2/sum(pca$sdev^2) * 100 )
+v
+## or the second row here...
+z <- summary(pca)
+z$importance
+```
+
+```{r}
+barplot(v, xlab="Principal Component", ylab="Percent Variation")
+## Lets focus on PC1 as it accounts for > 90% of variance 
+par(mar=c(10, 3, 0.35, 0))
+barplot( pca$rotation[,1], las=2 )
+
+```
+
+Q9: Generate a similar ‘loadings plot’ for PC2. What two food groups feature prominantely and what does PC2 maninly tell us about?
+```{r}
+
+##PC2
+par(mar=c(10, 3, 0.35, 0))
+barplot( pca$rotation[,2], las=2 )
+```
+It tells us about Fresh_potatoes and soft_drinks. wales eats more fresh potatoes than the rest and drinks fewer soft drinks.
+
+Q10> How many genes and samples are in this data set?
+```{r}
+url2 <- "https://tinyurl.com/expression-CSV"
+rna.data <- read.csv(url2, row.names=1)
+head(rna.data)
+dim(rna.data)
+```

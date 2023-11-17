@@ -1,0 +1,24 @@
+---
+title: "Class10"
+format: pdf
+---
+
+```{r}
+
+pdb_stats<-read.csv("/Users/jackie-l/Desktop/Bioinformatics/Class10/Data Export Summary.csv")
+```
+
+Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+(sum(pdb_stats$EM)+sum(pdb_stats$X.ray))/sum(pdb_stats$Total)
+
+```
+Q2: What proportion of structures in the PDB are protein?
+
+```{r}
+
+```
+
+Q3: Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+There are 7 HIV structures
