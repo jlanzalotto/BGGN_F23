@@ -2,4 +2,6 @@
 This repo is for my UCSD bioinformatics class. 
 
 [Class-5](Class05/Class5.qmd)
-#[Example R Markdown File](example.Rmd)
+[Class-6](Class06/Class6.qmd)
+[Class-7](Class06/Class7.qmd)
+[Class-13](Class13/Class13.qmd)
